@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+  drill-with-raw-steno.html
+  ─────────────────────────
+  Reference integration: a standard steno-jig drill page with the
+  raw steno input mode added.
+
+  To retrofit an EXISTING steno-jig drill page (e.g. learn-plover.html),
+  the only changes needed are:
+
+    1. Add <script src="raw-steno-input.js"></script>   (before closing </body>)
+    2. Add <script src="type-jig-raw-steno-patch.js"></script>  (after the above)
+
+  That's it. The patch auto-detects the TypeJig instance and inserts the
+  mode toggle + live display. No other files need modification.
+
+  This file is a self-contained demo that works without any build step.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Steno Jig — Raw Steno Mode Demo</title>
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <!-- If you have font-roboto.css include it here -->
+  <!-- <link rel="stylesheet" type="text/css" href="font-roboto.css"> -->
+  <script src="util.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+  <h1 class="center title">Steno Jig — Raw Steno Demo</h1>
+
+  <!--
+    INTEGRATION NOTE:
+    The <div id="raw-steno-display"> below is OPTIONAL.
+    If omitted, the patch will create and insert it automatically.
+    Include it explicitly here only if you want precise layout control.
+  -->
+  <div id="raw-steno-display" style="display:none"></div>
+
+  <!-- Standard TypeJig markup — unchanged from existing drill pages -->
+  <div id="output"></div>
+  <div id="exercise"></div>
+
+  <div id="controls">
+    <!-- The patch injects the mode toggle radio buttons here automatically,
+         immediately before the #input element. -->
+    <input id="input" type="text" autocomplete="off" autocorrect="off"
+           autocapitalize="off" spellcheck="false">
+  </div>
+
+  <p id="results"></p>
+  <p id="clock"></p>
+</div>
+
+<!-- ── Core steno-jig scripts (existing, unmodified) ── -->
+<script src="type-jig.js"></script>
+<script src="steno-display.js"></script>
+<script src="learn-plover.js"></script>
+
+<!-- ── Raw steno addition — just these two new script tags ── -->
+<script src="raw-steno-input.js"></script>
+<script src="type-jig-raw-steno-patch.js"></script>
+
+<!-- ── Page-level exercise setup (same as existing pages) ── -->
+<script>
+  // Example: run the "One Syllable Words" Learn Plover lesson
+  var words = TypeJig.WordSets.LearnPlover['One Syllable Words'];
+  var exercise = new TypeJig.Exercise(words, 0, true, 'shuffled');
+  var jig = new TypeJig(exercise, 'exercise', 'results', 'input', 'clock');
+  //
+  // After new TypeJig(...) returns, the patch has already:
+  //   - Injected the Input Mode toggle above #input
+  //   - Created the live chord StenoDisplay in #raw-steno-display
+  //   - Set up the stenoChord listener
+  //
+  // Users can now click "Raw steno (QWERTY)" and type chords immediately.
+</script>
+
+</body>
+</html>
